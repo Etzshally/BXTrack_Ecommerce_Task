@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axiosInstance from '../../utils/axiosInstance';
+import { MaterialReactTable } from 'material-react-table';
 import {
   Button,
   Dialog,
@@ -11,15 +11,10 @@ import {
   MenuItem,
   IconButton,
   Snackbar,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
+  Alert,
 } from '@mui/material';
 import { MdEdit, MdDelete } from 'react-icons/md';
+import axiosInstance from '../../utils/axiosInstance';
 
 const categories = [
   { id: 1, name: 'Electronics' },
@@ -42,7 +37,6 @@ const AdminDashboard = () => {
   const [open, setOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
   useEffect(() => {
     fetchProducts();
@@ -96,19 +90,8 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setProduct({ name: '', price: '', category: '', rating: '', description: '' });
-    setEditingProductId(null);
-  };
-
   const handleSnackbar = (message, severity) => {
     setSnackbarMessage(message);
-    setSnackbarSeverity(severity);
     setSnackbarOpen(true);
   };
 
@@ -117,128 +100,138 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
-
-      <Button variant="contained" color="primary" onClick={handleOpen}>
-        Add New Product
-      </Button>
-
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>{editingProductId ? 'Edit Product' : 'Add New Product'}</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Product Name"
-            type="text"
-            name="name"
-            value={product.name}
-            onChange={handleChange}
-            fullWidth
-            required
-          />
-          <TextField
-            margin="dense"
-            label="Product Price"
-            type="number"
-            name="price"
-            value={product.price}
-            onChange={handleChange}
-            fullWidth
-            required
-          />
-          <Select
-            name="category"
-            value={product.category}
-            onChange={handleChange}
-            fullWidth
-            required
-            displayEmpty
-            sx={{ mt: 2 }}
+    <div className="p-6 min-h-screen flex flex-col justify-start items-center bg-gradient-to-br from-gray-50 to-blue-50">
+      <div className="w-[90%] bg-white rounded-lg shadow-lg p-8">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-semibold text-gray-700">Admin Dashboard - Products</h1>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setOpen(true)}
+            className="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg shadow-md hover:from-blue-600 hover:to-blue-700 px-5 py-2"
           >
-            <MenuItem value="" disabled>Select a category</MenuItem>
-            {categories.map((category) => (
-              <MenuItem key={category.id} value={category.name}>
-                {category.name}
-              </MenuItem>
-            ))}
-          </Select>
-          <TextField
-            margin="dense"
-            label="Rating (0-5)"
-            type="number"
-            name="rating"
-            value={product.rating}
-            onChange={handleChange}
-            fullWidth
-            required
-            inputProps={{ min: 0, max: 5, step: 0.1 }}
-          />
-          <TextField
-            margin="dense"
-            label="Description"
-            type="text"
-            name="description"
-            value={product.description}
-            onChange={handleChange}
-            fullWidth
-            required
-            multiline
-            rows={4}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
+            + Add Product
           </Button>
-          <Button onClick={handleSubmit} color="primary">
-            {editingProductId ? 'Update' : 'Add'}
-          </Button>
-        </DialogActions>
-      </Dialog>
+        </div>
 
-      <TableContainer component={Paper} className="mt-4">
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell>Rating</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {products.map((prod) => (
-              <TableRow key={prod._id}>
-                <TableCell>{prod.name}</TableCell>
-                <TableCell>${prod.price.toFixed(2)}</TableCell>
-                <TableCell>{prod.category}</TableCell>
-                <TableCell>{prod.rating}</TableCell>
-                <TableCell>{prod.description}</TableCell>
-                <TableCell>
-                  <IconButton onClick={() => handleEdit(prod)} color="primary">
+        <MaterialReactTable
+          columns={[
+            { accessorKey: 'name', header: 'Product Name' },
+            { accessorKey: 'price', header: 'Price', Cell: ({ cell }) => `$${cell.getValue().toFixed(2)}` },
+            { accessorKey: 'category', header: 'Category' },
+            { accessorKey: 'rating', header: 'Rating', Cell: ({ cell }) => `${cell.getValue()} / 5` },
+            { accessorKey: 'description', header: 'Description', Cell: ({ cell }) => <span className="truncate">{cell.getValue() && cell.getValue().length > 30 ? cell.getValue().slice(0, 30) + " ..." : cell.getValue()}</span> },
+            {
+              id: 'actions',
+              header: 'Actions',
+              Cell: ({ row }) => (
+                <div className="flex space-x-2">
+                  <IconButton color="primary" onClick={() => handleEdit(row.original)}>
                     <MdEdit />
                   </IconButton>
-                  <IconButton onClick={() => handleDelete(prod._id)} color="secondary">
+                  <IconButton color="error" onClick={() => handleDelete(row.original._id)}>
                     <MdDelete />
                   </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+                </div>
+              ),
+            },
+          ]}
+          data={products}
+          enableColumnFilterModes
+          enablePagination
+          muiTableBodyProps={{
+            sx: { fontFamily: 'sans-serif', fontSize: '1rem', color: 'gray-700' },
+          }}
+          className="bg-white rounded-lg shadow-md border border-gray-200"
+        />
 
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={handleSnackbarClose}
-        message={snackbarMessage}
-        severity={snackbarSeverity}
-      />
+        <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
+          <DialogTitle className="text-center text-gray-800 text-2xl font-semibold border-b">
+            {editingProductId ? 'Edit Product' : 'Add New Product'}
+          </DialogTitle>
+          <DialogContent className="pt-6">
+            <TextField
+              label="Product Name"
+              name="name"
+              value={product.name}
+              onChange={handleChange}
+              fullWidth
+              margin="dense"
+              required
+              variant="outlined"
+            />
+            <TextField
+              label="Price"
+              name="price"
+              value={product.price}
+              onChange={handleChange}
+              fullWidth
+              margin="dense"
+              required
+              variant="outlined"
+              type="number"
+            />
+            <Select
+              name="category"
+              value={product.category}
+              onChange={handleChange}
+              fullWidth
+              margin="dense"
+              displayEmpty
+            >
+              <MenuItem value="" disabled>Select a category</MenuItem>
+              {categories.map((cat) => (
+                <MenuItem key={cat.id} value={cat.name}>
+                  {cat.name}
+                </MenuItem>
+              ))}
+            </Select>
+            <TextField
+              label="Rating (0-5)"
+              name="rating"
+              value={product.rating}
+              onChange={handleChange}
+              fullWidth
+              margin="dense"
+              required
+              variant="outlined"
+              type="number"
+              inputProps={{ min: 0, max: 5, step: 0.1 }}
+            />
+            <TextField
+              label="Description"
+              name="description"
+              value={product.description}
+              onChange={handleChange}
+              fullWidth
+              margin="dense"
+              multiline
+              rows={3}
+              variant="outlined"
+            />
+          </DialogContent>
+          <DialogActions className="p-4 border-t">
+            <Button onClick={() => setOpen(false)} className="text-gray-500 hover:bg-gray-100 rounded-md px-4 py-2">
+              Cancel
+            </Button>
+            <Button onClick={handleSubmit} variant="contained" color="primary" className="bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-md px-6 py-2 hover:from-blue-600 hover:to-blue-700">
+              {editingProductId ? 'Update' : 'Add'}
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={3000}
+          onClose={handleSnackbarClose}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
+
+      </div>
     </div>
   );
 };

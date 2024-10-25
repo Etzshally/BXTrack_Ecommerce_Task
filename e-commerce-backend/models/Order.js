@@ -10,6 +10,7 @@ const OrderSchema = new mongoose.Schema({
     default: OrderStatus.PENDING,
   },
   createdAt: { type: Date, default: Date.now },
+  totalAmount: { type: String, required: true }
 });
 
 module.exports = mongoose.model('Order', OrderSchema);

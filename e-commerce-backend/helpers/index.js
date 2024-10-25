@@ -1,7 +1,7 @@
 const OrderStatus = Object.freeze({
     PENDING: 'pending',
     APPROVED: 'approved',
-    CANCELLED: 'cancelled',
+    DECLINED: 'declined',
 });
 
 module.exports = OrderStatus;

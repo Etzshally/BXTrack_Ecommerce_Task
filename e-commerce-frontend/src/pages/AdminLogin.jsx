@@ -9,25 +9,22 @@ const AdminLogin = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // Hardcoded admin credentials
   const ADMIN_CREDENTIALS = {
-    username: 'admin', // your admin username
-    password: 'admin123' // your admin password
+    username: 'admin',
+    password: 'admin123'
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
 
-    // Check if entered credentials match the hardcoded admin credentials
     if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-      // Create a dummy token (or you can fetch a real one if needed)
       const token = 'dummy-admin-token';
-      const role = 'admin'; // Role for the admin user
-      // Set user state with admin details
+      const role = 'admin';
+
       setUser({ token, username, role });
-      localStorage.setItem('token', token); // Store the dummy token
-      navigate('/admin'); // Redirect to admin dashboard
+      localStorage.setItem('token', token);
+      navigate('/admin');
     } else {
       setError('Invalid admin credentials. Please try again.');
     }

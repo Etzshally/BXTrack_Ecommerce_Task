@@ -17,7 +17,7 @@ const UserSignup = () => {
     setLoading(true);
 
     try {
-      await axiosInstance.post('/users/register', { username, password });
+      await axiosInstance.post('api/users/register', { username, password });
       setSuccess('Registration successful! Please log in.');
       setTimeout(() => navigate('/login'), 2000); // Redirect to login after 2 seconds
     } catch (err) {

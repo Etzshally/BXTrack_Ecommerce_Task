@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useCart } from '../../context/CartContext';
+import { FaCartShopping } from "react-icons/fa6";
 
 const Header = () => {
     const { user, logout } = useAuth();
+    const { cart } = useCart();
 
     return (
         <header className="bg-gray-800 text-white p-4">
@@ -25,6 +28,7 @@ const Header = () => {
                         </>
                     )}
                 </nav>
+                {cart.length > 0 && (<Link to="/cart"><button className='flex flex-row justify-center items-center gap-1'><FaCartShopping />{cart.length}</button></Link>)}
             </div>
         </header>
     );

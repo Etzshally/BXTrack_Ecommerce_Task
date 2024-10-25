@@ -19,7 +19,7 @@ import AdminLogin from './pages/AdminLogin';
 
 function App() {
   const { loading, user } = useAuth();
-  console.log(user)
+
   if (loading) {
     return <Loader />;
   }

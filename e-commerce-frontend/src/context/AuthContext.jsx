@@ -15,10 +15,11 @@ export const AuthProvider = ({ children }) => {
       } else {
         const payload = token.split('.')[1];
         const decodedPayload = JSON.parse(atob(payload));
-        
+
+        const id = decodedPayload.id
         const username = decodedPayload.username;
         const role = decodedPayload.role;
-        setUser({ token, username, role });
+        setUser({ token, username, role, id });
       }
     }
     setLoading(false);
