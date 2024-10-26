@@ -34,9 +34,9 @@ const ProductCard = ({ product }) => {
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow-md p-4">
+      <div className="bg-white rounded-lg w-full shadow-md p-4">
         <Link to={`/products/${product._id}`}>
-          {/* <img src={product.image} alt={product.name} className="h-40 w-full object-cover mb-2" /> */}
+          <img src={`${import.meta.env.VITE_APP_BACKEND_URL}${product.imageUrl}`} alt={product.name} className="h-40 w-full object-cover mb-2" />
           <h3 className="text-lg font-semibold">{product.name}</h3>
           <p className="text-gray-700">${product.price.toFixed(2)}</p>
         </Link>

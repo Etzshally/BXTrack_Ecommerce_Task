@@ -22,7 +22,7 @@ const Cart = () => {
     };
 
     try {
-      const response = await axiosInstance.post('/api/orders', orderData);
+      await axiosInstance.post('/api/orders', orderData);
       clearCart();
       setSnackbarMessage('Order created successfully!');
       setSnackbarSeverity('success');
@@ -44,7 +44,7 @@ const Cart = () => {
 
 
   return (
-    <div className="p-4">
+    <div className="p-4 min-h-screen">
       <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
       {cart.length === 0 ? (
         <p>Your cart is empty.</p>
@@ -54,7 +54,8 @@ const Cart = () => {
             {cart.map(item => (
               <li key={item._id} className="flex justify-between items-center mb-4">
                 <div className="flex items-center">
-                  <div>
+                  <img src={`${import.meta.env.VITE_APP_BACKEND_URL}${item.imageUrl}`} alt={item.name} className="h-20 w-20 object-cover mb-2" />
+                  <div className='ml-5'>
                     <h3 className="text-lg font-semibold">{item.name}</h3>
                     <p className="text-gray-700">${item.price.toFixed(2)}</p>
                   </div>

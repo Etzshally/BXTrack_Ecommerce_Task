@@ -1,19 +1,68 @@
 const express = require('express');
 const Product = require('../models/Product');
+const multer = require('multer');
+const path = require('path');
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
-  const product = new Product(req.body);
-  await product.save();
-  res.status(201).json(product);
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage });
+
+router.post('/', upload.single('image'), async (req, res) => {
+  try {
+    const { name, price, category, rating, description } = req.body;
+
+    const imageUrl = req.file ? `/uploads/${req.file.filename}` : '';
+
+    const product = new Product({
+      name,
+      price,
+      category,
+      rating,
+      description,
+      imageUrl,
+    });
+
+    await product.save();
+    res.status(201).json(product);
+  } catch (err) {
+    console.error('Error adding product:', err);
+    res.status(500).json({ message: 'Failed to add product' });
+  }
 });
 
 router.get('/', async (req, res) => {
-  const { category } = req.query;
-  const query = category ? { category } : {};
-  const products = await Product.find(query);
-  res.json(products);
+  const { category, rating, minPrice, maxPrice } = req.query;
+  const query = {};
+
+  if (category) {
+    query.category = category;
+  }
+
+  if (rating) {
+    query.rating = { $gte: Number(rating) };
+  }
+
+  if (minPrice || maxPrice) {
+    query.price = {};
+    if (minPrice) query.price.$gte = Number(minPrice);
+    if (maxPrice) query.price.$lte = Number(maxPrice);
+  }
+
+  try {
+    const products = await Product.find(query);
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch products' });
+  }
 });
 
 router.put('/:id', async (req, res) => {
