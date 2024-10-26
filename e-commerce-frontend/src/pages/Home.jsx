@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '../utils/axiosInstance';
 import ProductCard from '../components/ProductCard';
 import { Select, MenuItem, InputLabel, FormControl, Button, TextField, Box } from '@mui/material';
+import Lottie from "lottie-react";
+import EmptyAnim from "../assets/ui/emptyanim.json"
 
 const Home = () => {
   const [categories, setCategories] = useState([]);
@@ -10,6 +12,17 @@ const Home = () => {
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(10000);
   const [minRating, setMinRating] = useState(0);
+
+  const clearFilters = () => {
+    setSelectedCategory('');
+    setMinPrice(0);
+    setMaxPrice(10000);
+    setMinRating(0);
+  }
+
+  useEffect(() => {
+    fetchProducts();
+  }, [selectedCategory, minPrice, maxPrice, minRating])
 
   useEffect(() => {
     fetchCategories();
@@ -40,10 +53,6 @@ const Home = () => {
     } catch (error) {
       console.error("Error fetching products:", error);
     }
-  };
-
-  const handleFilterChange = () => {
-    fetchProducts();
   };
 
   return (
@@ -121,15 +130,16 @@ const Home = () => {
               ))}
             </Select>
           </FormControl>
-
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleFilterChange}
-            sx={{ minWidth: '150px', fontWeight: 'bold', mt: { xs: 2, md: 0 } }}
-          >
-            Apply Filters
-          </Button>
+          <Box display="flex" flexDirection="column" width="100%">
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={clearFilters}
+              sx={{ minWidth: '150px', fontWeight: 'bold', mt: { xs: 2, md: 1 } }}
+            >
+              Clear Filters
+            </Button>
+          </Box>
         </Box>
       </section>
 
@@ -139,10 +149,13 @@ const Home = () => {
           {products.map((product, index) => (
             <ProductCard product={product} key={index} />
           ))}
-          {products.length === 0 && (
-            <p>No products found based on filters..</p>
-          )}
         </div>
+        {products.length === 0 && (
+          <div className='w-full flex flex-col justify-center items-center'>
+            <Lottie animationData={EmptyAnim} loop={true} />
+            <p className='text-2xl font-bold text-center'>No product available...</p>
+          </div>
+        )}
       </section>
     </div>
   );

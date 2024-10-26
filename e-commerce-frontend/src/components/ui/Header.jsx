@@ -6,7 +6,7 @@ import { FaCartShopping } from "react-icons/fa6";
 
 const Header = () => {
     const { user, logout } = useAuth();
-    const { cart } = useCart();
+    const { cart, clearCart } = useCart();
 
     return (
         <header className="bg-gray-800 text-white p-4">
@@ -19,7 +19,7 @@ const Header = () => {
                         <>
                             {user && user.role === "user" && (<Link to="/user" className="hover:text-gray-400">Profile</Link>)}
                             {user && user.role === "admin" && (<Link to="/admin" className="hover:text-gray-400">Dashboard</Link>)}
-                            <button onClick={logout} className="hover:text-gray-400">Logout</button>
+                            <button onClick={() => { logout(); clearCart() }} className="hover:text-gray-400">Logout</button>
                         </>
                     ) : (
                         <>
