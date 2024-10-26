@@ -77,7 +77,7 @@ const Categories = () => {
   return (
     <div className="min-h-screen flex flex-col justify-start items-center bg-gradient-to-br from-blue-50 to-gray-100 p-8">
       <div className="w-[90%] bg-white rounded-lg shadow-lg p-8">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col justify-center items-start gap-3 mb-8">
           <h2 className="text-4xl font-bold text-gray-700">Categories</h2>
           <Button
             variant="contained"

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import AuthModal from './AuthModal';
@@ -35,11 +34,10 @@ const ProductCard = ({ product }) => {
   return (
     <>
       <div className="bg-white rounded-lg w-full shadow-md p-4">
-        <Link to={`/products/${product._id}`}>
-          <img src={`${import.meta.env.VITE_APP_BACKEND_URL}${product.imageUrl}`} alt={product.name} className="h-40 w-full object-cover mb-2" />
-          <h3 className="text-lg font-semibold">{product.name}</h3>
-          <p className="text-gray-700">${product.price.toFixed(2)}</p>
-        </Link>
+
+        <img src={`${import.meta.env.VITE_APP_BACKEND_URL}${product.imageUrl}`} alt={product.name} className="h-40 w-full object-cover mb-2" />
+        <h3 className="text-lg font-semibold">{product.name}</h3>
+        <p className="text-gray-700">${product.price.toFixed(2)}</p>
 
         {isInCart ? (
           <button

@@ -12,6 +12,7 @@ import {
   Divider,
 } from '@mui/material';
 import { Menu as MenuIcon, Category as CategoryIcon, List as ProductIcon } from '@mui/icons-material';
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import { Link } from 'react-router-dom';
 
 const AdminLayout = ({ children }) => {
@@ -24,7 +25,7 @@ const AdminLayout = ({ children }) => {
   const sidebarItems = [
     { text: 'Products', icon: <ProductIcon />, path: '/admin/' },
     { text: 'Categories', icon: <CategoryIcon />, path: '/admin/categories' },
-    { text: 'Orders', icon: <CategoryIcon />, path: '/admin/orders' },
+    { text: 'Orders', icon: <ShoppingBagIcon />, path: '/admin/orders' },
   ];
 
   return (

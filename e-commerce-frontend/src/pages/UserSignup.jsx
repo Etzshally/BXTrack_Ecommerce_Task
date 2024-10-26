@@ -19,7 +19,7 @@ const UserSignup = () => {
     try {
       await axiosInstance.post('api/users/register', { username, password });
       setSuccess('Registration successful! Please log in.');
-      setTimeout(() => navigate('/login'), 2000); // Redirect to login after 2 seconds
+      setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
       setError('Failed to signup. Please try again.');
     } finally {

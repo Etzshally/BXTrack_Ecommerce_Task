@@ -116,9 +116,13 @@ const AdminDashboard = () => {
   return (
     <div className="p-6 min-h-screen flex flex-col justify-start items-center bg-gradient-to-br from-gray-50 to-blue-50">
       <div className="w-[90%] bg-white rounded-lg shadow-lg p-8">
-        <Button sx={{ marginBottom: "10px" }} variant="contained" color="primary" onClick={() => setOpen(true)}>
-          + Add Product
-        </Button>
+
+        <div className="flex flex-col justify-center items-start gap-3 mb-8">
+          <h2 className="text-4xl font-bold text-gray-700">Products</h2>
+          <Button sx={{ marginBottom: "10px" }} variant="contained" color="primary" onClick={() => setOpen(true)}>
+            + Add Product
+          </Button>
+        </div>
 
         <MaterialReactTable
           columns={[
@@ -181,7 +185,7 @@ const AdminDashboard = () => {
             <Select name="category" value={product.category} onChange={handleChange} fullWidth margin="dense">
               <MenuItem value="" disabled>Select a category</MenuItem>
               {categories.map((cat) => (
-                <MenuItem key={cat.id} value={cat.name}>{cat.name}</MenuItem>
+                <MenuItem key={cat._id} value={cat.name}>{cat.name}</MenuItem>
               ))}
             </Select>
             <TextField label="Rating (0-5)" name="rating" value={product.rating} onChange={handleChange} fullWidth margin="dense" type="number" />

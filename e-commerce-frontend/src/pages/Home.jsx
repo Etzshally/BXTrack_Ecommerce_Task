@@ -13,6 +13,14 @@ const Home = () => {
   const [maxPrice, setMaxPrice] = useState(10000);
   const [minRating, setMinRating] = useState(0);
 
+  const isFilterApplied = () => {
+    if (selectedCategory !== '' || minPrice !== 0 || maxPrice !== 10000 || minRating !== 0) {
+      return true
+    } else {
+      return false
+    }
+  }
+
   const clearFilters = () => {
     setSelectedCategory('');
     setMinPrice(0);
@@ -130,7 +138,7 @@ const Home = () => {
               ))}
             </Select>
           </FormControl>
-          <Box display="flex" flexDirection="column" width="100%">
+          {isFilterApplied() && (<Box display="flex" flexDirection="column" width="100%">
             <Button
               variant="outlined"
               color="secondary"
@@ -139,7 +147,7 @@ const Home = () => {
             >
               Clear Filters
             </Button>
-          </Box>
+          </Box>)}
         </Box>
       </section>
 
