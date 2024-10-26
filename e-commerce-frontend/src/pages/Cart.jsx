@@ -22,6 +22,10 @@ const Cart = () => {
     };
 
     try {
+      await axiosInstance.post('/api/payments', {
+        userId: user.id,
+        totalAmount: totalPrice,
+      });
       await axiosInstance.post('/api/orders', orderData);
       clearCart();
       setSnackbarMessage('Order created successfully!');
