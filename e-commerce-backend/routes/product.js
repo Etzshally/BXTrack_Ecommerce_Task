@@ -1,24 +1,17 @@
 const express = require('express');
 const Product = require('../models/Product');
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('../config/cloudinaryConfig');
 const { body, validationResult } = require('express-validator');
 
 const router = express.Router();
 
-const uploadDir = 'uploads';
-
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
-}
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'uploads',
+    allowed_formats: ['jpg', 'png', 'jpeg'],
   },
 });
 
@@ -28,25 +21,11 @@ router.post(
   '/',
   upload.single('image'),
   [
-    body('name')
-      .notEmpty()
-      .withMessage('Product name is required'),
-    body('price')
-      .isNumeric()
-      .withMessage('Price must be a number')
-      .notEmpty()
-      .withMessage('Price is required'),
-    body('category')
-      .notEmpty()
-      .withMessage('Category is required'),
-    body('rating')
-      .isNumeric()
-      .withMessage('Rating must be a number')
-      .isInt({ min: 0, max: 5 })
-      .withMessage('Rating must be between 0 and 5'),
-    body('description')
-      .notEmpty()
-      .withMessage('Description is required'),
+    body('name').notEmpty().withMessage('Product name is required'),
+    body('price').isNumeric().withMessage('Price must be a number').notEmpty().withMessage('Price is required'),
+    body('category').notEmpty().withMessage('Category is required'),
+    body('rating').isNumeric().withMessage('Rating must be a number').isInt({ min: 0, max: 5 }).withMessage('Rating must be between 0 and 5'),
+    body('description').notEmpty().withMessage('Description is required'),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -56,7 +35,7 @@ router.post(
 
     try {
       const { name, price, category, rating, description } = req.body;
-      const imageUrl = req.file ? `/uploads/${req.file.filename}` : '';
+      const imageUrl = req.file ? req.file.path : '';
 
       const product = new Product({
         name,
@@ -75,6 +54,7 @@ router.post(
     }
   }
 );
+
 
 router.get('/', async (req, res) => {
   const { category, rating, minPrice, maxPrice } = req.query;

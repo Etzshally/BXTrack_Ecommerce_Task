@@ -35,7 +35,7 @@ const ProductCard = ({ product }) => {
     <>
       <div className="bg-white rounded-lg w-full shadow-md p-4">
 
-        <img src={`${import.meta.env.VITE_APP_BACKEND_URL}${product.imageUrl}`} alt={product.name} className="h-40 w-full object-cover mb-2" />
+        <img src={product.imageUrl} alt={product.name} className="h-40 w-full object-cover mb-2" />
         <h3 className="text-lg font-semibold">{product.name}</h3>
         <p className="text-gray-700">${product.price.toFixed(2)}</p>
 

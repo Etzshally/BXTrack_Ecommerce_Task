@@ -58,7 +58,7 @@ const Cart = () => {
             {cart.map(item => (
               <li key={item._id} className="flex justify-between items-center mb-4">
                 <div className="flex items-center">
-                  <img src={`${import.meta.env.VITE_APP_BACKEND_URL}${item.imageUrl}`} alt={item.name} className="h-20 w-20 object-cover mb-2" />
+                  <img src={item.imageUrl} alt={item.name} className="h-20 w-20 object-cover mb-2" />
                   <div className='ml-5'>
                     <h3 className="text-lg font-semibold">{item.name}</h3>
                     <p className="text-gray-700">${item.price.toFixed(2)}</p>

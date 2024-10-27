@@ -113,6 +113,17 @@ const AdminDashboard = () => {
     setOpen(true);
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await axiosInstance.delete(`/api/products/${id}`);
+      handleSnackbar('Product deleted successfully.', 'success');
+      fetchProducts();
+    } catch (err) {
+      handleSnackbar('Failed to delete product.', 'error');
+    }
+  };
+
+
   return (
     <div className="p-6 min-h-screen flex flex-col justify-start items-center bg-gradient-to-br from-gray-50 to-blue-50">
       <div className="w-[90%] bg-white rounded-lg shadow-lg p-8">
@@ -132,7 +143,7 @@ const AdminDashboard = () => {
               Cell: ({ cell }) => (
                 <>
                   <img
-                    src={`${import.meta.env.VITE_APP_BACKEND_URL}${cell.getValue()}`}
+                    src={cell.getValue()}
                     alt="Product"
                     style={{ width: '50px', height: '50px', objectFit: 'cover' }}
                   />
